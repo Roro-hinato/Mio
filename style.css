@@ -1,8 +1,62 @@
 /* Définition de la couleur de fond principale et de la police */
 body {
-    background-image: linear-gradient(45deg, #020617 0%, #0F172A 100%);
+    background-color: #020617; /* Fond uni de secours */
     font-family: 'Fraunces', serif;
+    overflow-x: hidden;
 }
+
+
+/* --- Animation du ciel étoilé en arrière-plan --- */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: linear-gradient(45deg, #020617 0%, #0F172A 100%);
+    overflow: hidden;
+}
+
+/* Keyframes pour le scintillement des étoiles */
+@keyframes twinkle {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* Utilisation des pseudo-éléments pour créer les couches d'étoiles */
+.background-container::before,
+.background-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Couche 1 : Étoiles petites et denses */
+.background-container::before {
+    animation: twinkle 8s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
+    /* Génération d'un grand nombre d'étoiles réparties sur tout l'écran */
+    box-shadow: 7vw 86vh #FFF, 82vw 82vh #FFF, 85vw 23vh #FFF, 62vw 14vh #FFF, 8vw 53vh #FFF, 81vw 60vh #FFF, 59vw 94vh #FFF, 58vw 1vh #FFF, 48vw 15vh #FFF, 6vw 4vh #FFF, 12vw 14vh #FFF, 42vw 82vh #FFF, 3vw 69vh #FFF, 66vw 91vh #FFF, 81vw 9vh #FFF, 41vw 95vh #FFF, 66vw 81vh #FFF, 91vw 12vh #FFF, 84vw 35vh #FFF, 67vw 2vh #FFF, 4vw 7vh #FFF, 80vw 21vh #FFF, 34vw 1vh #FFF, 12vw 92vh #FFF, 99vw 81vh #FFF, 65vw 86vh #FFF, 54vw 43vh #FFF, 11vw 22vh #FFF, 85vw 3vh #FFF, 16vw 85vh #FFF, 5vw 79vh #FFF, 54vw 2vh #FFF, 10vw 98vh #FFF, 94vw 38vh #FFF, 21vw 98vh #FFF, 45vw 68vh #FFF, 71vw 82vh #FFF, 25vw 80vh #FFF, 2vw 91vh #FFF, 76vw 5vh #FFF, 43vw 95vh #FFF, 13vw 81vh #FFF, 90vw 55vh #FFF, 66vw 41vh #FFF, 40vw 43vh #FFF, 84vw 46vh #FFF, 48vw 80vh #FFF, 68vw 82vh #FFF, 82vw 80vh #FFF, 94vw 97vh #FFF;
+}
+
+/* Couche 2 : Étoiles plus grandes et plus lentes */
+.background-container::after {
+    width: 2px;
+    height: 2px;
+    animation: twinkle 10s ease-in-out infinite -4s;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+    /* Génération d'étoiles plus grosses réparties sur tout l'écran */
+    box-shadow: 46vw 4vh #FFF, 8vw 38vh #FFF, 63vw 32vh #FFF, 23vw 22vh #FFF, 41vw 8vh #FFF, 82vw 27vh #FFF, 28vw 52vh #FFF, 76vw 91vh #FFF, 93vw 85vh #FFF, 4vw 87vh #FFF, 13vw 80vh #FFF, 66vw 93vh #FFF, 81vw 48vh #FFF, 95vw 12vh #FFF, 35vw 3vh #FFF, 7vw 3vh #FFF, 58vw 98vh #FFF, 99vw 8vh #FFF, 41vw 92vh #FFF, 82vw 88vh #FFF, 18vw 63vh #FFF, 84vw 72vh #FFF, 74vw 10vh #FFF, 51vw 35vh #FFF, 2vw 41vh #FFF, 94vw 46vh #FFF, 16vw 87vh #FFF, 87vw 6vh #FFF, 43vw 75vh #FFF, 20vw 48vh #FFF, 59vw 42vh #FFF, 71vw 29vh #FFF, 5vw 42vh #FFF, 9vw 7vh #FFF, 89vw 59vh #FFF, 53vw 84vh #FFF, 3vw 16vh #FFF, 31vw 79vh #FFF, 28vw 98vh #FFF, 99vw 64vh #FFF;
+}
+/* --- Fin de l'animation --- */
+
 
 /* Style pour une transition douce du contenu */
 #content-area > div {
@@ -210,3 +264,4 @@ body {
     position: relative; /* Nécessaire pour que z-index fonctionne */
     z-index: 45;
 }
+

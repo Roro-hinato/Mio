@@ -17,6 +17,9 @@
 </head>
 <body class="text-slate-400 antialiased">
 
+    <!-- Conteneur dédié à l'animation d'arrière-plan -->
+    <div class="background-container"></div>
+
     <div id="gallery-overlay" class="fixed inset-0 bg-black/0 pointer-events-none transition-all duration-500 z-40"></div>
 
     <!-- Élément audio pour le son de clic sur les boutons -->
@@ -24,7 +27,7 @@
         <source src="https://www.soundjay.com/buttons/sounds/button-30.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="app" class="min-h-screen flex flex-col">
+    <div id="app" class="min-h-screen flex flex-col relative z-10">
 
         <header class="bg-black/10 backdrop-blur-sm shadow-lg sticky top-0 z-50">
             <nav class="container mx-auto px-6 py-4 flex justify-between items-center text-slate-300">

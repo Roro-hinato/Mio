@@ -336,4 +336,3 @@ document.addEventListener('DOMContentLoaded', () => {
     dragHandle.addEventListener('mousedown', startDrag);
     dragHandle.addEventListener('touchstart', startDrag);
 });
-
