@@ -1,7 +1,7 @@
 /* Définition de la couleur de fond principale et de la police */
 body {
     background-color: #020617; /* Fond uni de secours */
-    font-family: 'Fraunces', serif;
+    font-family: 'Quicksand', sans-serif; /* Nouvelle police douce */
     overflow-x: hidden;
 }
 
@@ -54,6 +54,65 @@ body {
     filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
     /* Génération d'étoiles plus grosses réparties sur tout l'écran */
     box-shadow: 46vw 4vh #FFF, 8vw 38vh #FFF, 63vw 32vh #FFF, 23vw 22vh #FFF, 41vw 8vh #FFF, 82vw 27vh #FFF, 28vw 52vh #FFF, 76vw 91vh #FFF, 93vw 85vh #FFF, 4vw 87vh #FFF, 13vw 80vh #FFF, 66vw 93vh #FFF, 81vw 48vh #FFF, 95vw 12vh #FFF, 35vw 3vh #FFF, 7vw 3vh #FFF, 58vw 98vh #FFF, 99vw 8vh #FFF, 41vw 92vh #FFF, 82vw 88vh #FFF, 18vw 63vh #FFF, 84vw 72vh #FFF, 74vw 10vh #FFF, 51vw 35vh #FFF, 2vw 41vh #FFF, 94vw 46vh #FFF, 16vw 87vh #FFF, 87vw 6vh #FFF, 43vw 75vh #FFF, 20vw 48vh #FFF, 59vw 42vh #FFF, 71vw 29vh #FFF, 5vw 42vh #FFF, 9vw 7vh #FFF, 89vw 59vh #FFF, 53vw 84vh #FFF, 3vw 16vh #FFF, 31vw 79vh #FFF, 28vw 98vh #FFF, 99vw 64vh #FFF;
+}
+
+/* --- Animation des étoiles filantes --- */
+.shooting-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+@keyframes shoot {
+    0% {
+        transform: translateX(0) translateY(0) rotate(-45deg);
+        opacity: 1;
+    }
+    /* La trajectoire visible ne dure que 10% du temps total de l'animation */
+    10% {
+        transform: translateX(-100vw) translateY(100vh) rotate(-45deg);
+        opacity: 0;
+    }
+    /* Le reste du temps, l'étoile est invisible */
+    100% {
+        transform: translateX(-100vw) translateY(100vh) rotate(-45deg);
+        opacity: 0;
+    }
+}
+
+.shooting-stars::before,
+.shooting-stars::after {
+    content: '';
+    position: absolute;
+    width: 150px; /* Longueur de la traînée */
+    height: 2px;
+    /* Gradient corrigé pour que la tête soit à l'avant */
+    background: linear-gradient(to right, rgba(255, 255, 255, 1) 5%, transparent 100%);
+    border-radius: 999px;
+    filter: drop-shadow(0 0 6px #fff); /* Ajout d'une lueur globale */
+    opacity: 0;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: shoot;
+}
+
+.shooting-stars::before {
+    top: 10vh;
+    left: 100vw; /* Commence hors de l'écran à droite */
+    /* Cycle total de 17 secondes, démarre après 3 secondes */
+    animation-duration: 17s;
+    animation-delay: 3s;
+}
+
+.shooting-stars::after {
+    top: 40vh;
+    left: 100vw; /* Commence hors de l'écran à droite */
+    /* Cycle total de 23 secondes, démarre après 12 secondes pour éviter les superpositions */
+    animation-duration: 23s;
+    animation-delay: 12s;
 }
 /* --- Fin de l'animation --- */
 

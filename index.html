@@ -6,10 +6,10 @@
     <title>Mio</title>
     <!-- Intégration de Tailwind CSS pour le style de base -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Importation de la police Fraunces depuis Google Fonts -->
+    <!-- Importation de la nouvelle police Quicksand depuis Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
     <!-- Lien vers votre feuille de style personnalisée -->
     <link rel="stylesheet" href="style.css">
     <!-- Ajout de la favicon -->
@@ -17,8 +17,10 @@
 </head>
 <body class="text-slate-400 antialiased">
 
-    <!-- Conteneur dédié à l'animation d'arrière-plan -->
-    <div class="background-container"></div>
+    <!-- Conteneur pour l'animation d'arrière-plan -->
+    <div class="background-container">
+        <div class="shooting-stars"></div>
+    </div>
 
     <div id="gallery-overlay" class="fixed inset-0 bg-black/0 pointer-events-none transition-all duration-500 z-40"></div>
 
@@ -27,7 +29,7 @@
         <source src="https://www.soundjay.com/buttons/sounds/button-30.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="app" class="min-h-screen flex flex-col relative z-10">
+    <div id="app" class="min-h-screen flex flex-col">
 
         <header class="bg-black/10 backdrop-blur-sm shadow-lg sticky top-0 z-50">
             <nav class="container mx-auto px-6 py-4 flex justify-between items-center text-slate-300">

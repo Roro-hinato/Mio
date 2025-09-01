@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     ${galleryData.images.map((img, i) => `
                         <div class="group aspect-[9/16] overflow-hidden rounded-lg shadow-xl shadow-blue-900/30">
-                            <img src="${img.src}" alt="Photo ${galleryName} ${i + 1}" 
+                            <!-- src est vide initialement, il sera rempli par la miniature générée -->
+                            <img src="" 
+                                 data-src="${img.src}" 
+                                 alt="Photo ${galleryName} ${i + 1}" 
                                  class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 cursor-pointer ${img.className || ''}"
                                  data-gallery="${galleryName}" 
                                  data-index="${i}">
@@ -40,6 +43,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `;
+    }
+
+    // Fonction pour pré-charger les images de la galerie en arrière-plan
+    function preloadGalleryImages() {
+        console.log("Pré-chargement des images de la galerie en cours...");
+        Object.values(galleries).forEach(gallery => {
+            gallery.images.forEach(imgData => {
+                const image = new Image();
+                image.src = imgData.src;
+            });
+        });
+    }
+
+    // Fonction pour générer et afficher des miniatures basse résolution via canvas
+    function renderLowResThumbnails() {
+        const galleryImages = document.querySelectorAll('.grid img[data-src]');
+
+        galleryImages.forEach(imgElement => {
+            const highResSrc = imgElement.dataset.src;
+            const loader = new Image();
+            loader.crossOrigin = "Anonymous"; // Nécessaire pour le canvas si les images sont sur un autre domaine
+            loader.src = highResSrc;
+
+            loader.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // MODIFICATION: Viser une hauteur de 720px (720p) et calculer la largeur correspondante
+                const targetHeight = 720;
+                const aspectRatio = loader.naturalWidth / loader.naturalHeight;
+                const targetWidth = Math.round(targetHeight * aspectRatio);
+
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
+
+                // Dessiner l'image haute résolution sur le canvas redimensionné
+                ctx.drawImage(loader, 0, 0, targetWidth, targetHeight);
+
+                // Appliquer la version basse résolution (via data URL) à l'élément image de la galerie
+                // J'ai légèrement augmenté la qualité car la résolution est plus élevée
+                imgElement.src = canvas.toDataURL('image/jpeg', 0.85); 
+            };
+            loader.onerror = () => {
+                console.error(`Impossible de charger l'image: ${highResSrc}`);
+            };
+        });
     }
 
     const pageContent = {
@@ -92,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeIcon = document.getElementById('close-icon');
     const mobileMenu = document.getElementById('mobile-menu');
     const clickSound = document.getElementById('click-sound');
+    const titleLink = document.querySelector('header nav a');
 
     // --- Logique de déblocage audio ---
     function unlockAllAudio() {
@@ -166,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.appendChild(lightboxNext);
 
     function showImage(gallery, index) {
-        // La source de l'image est maintenant dans la propriété 'src' de l'objet
+        // La lightbox utilise toujours la source originale haute résolution depuis l'objet de données
         const images = galleries[gallery].images;
         if (!images || index < 0 || index >= images.length) {
             return;
@@ -234,6 +284,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.add('active');
             }
         });
+
+        // Si la page est la galerie, on génère les miniatures
+        if (page === 'gallery') {
+            // setTimeout s'assure que le DOM a été mis à jour avant de manipuler les images
+            setTimeout(() => renderLowResThumbnails(), 0);
+        }
+    }
+
+    // Ajout de l'écouteur d'événement pour le titre/logo
+    if (titleLink) {
+        titleLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Empêche le comportement par défaut du lien
+            playClickSound();
+            renderContent('home');
+        });
     }
 
     allNavButtons.forEach(button => {
@@ -257,13 +322,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     renderContent('home');
+    preloadGalleryImages(); // On conserve le pré-chargement pour accélérer la génération des miniatures
 
     // --- Logique pour le lecteur Lo-Fi déplaçable ---
     const lofiPlayer = document.getElementById('lofi-player');
     
     const dragHandle = document.createElement('div');
     dragHandle.className = 'lofi-drag-handle';
-    dragHandle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>`;
+    // Remplacement par le nouveau SVG
+    dragHandle.innerHTML = `<svg fill="#7d7d7d" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" stroke="#7d7d7d"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <path d="M4.843 18.126l-3.64-3.644 3.64-3.612c.464-.45-.234-1.2-.71-.71L.14 14.127c-.187.186-.187.525 0 .71l3.993 4c.488.49 1.18-.238.71-.71zm19.314-7.252l3.64 3.644-3.64 3.61c-.464.453.234 1.202.71.712l3.994-3.967c.187-.186.187-.525 0-.71l-3.993-4c-.488-.49-1.18.238-.71.71zm-6.03 13.283l-3.645 3.64-3.61-3.64c-.453-.464-1.202.235-.712.71l3.967 3.994c.186.187.525.187.71 0l4-3.993c.49-.488-.238-1.18-.71-.71zM10.873 4.843l3.644-3.64 3.612 3.64c.45.464 1.2-.235.71-.71L14.873.14c-.186-.187-.525-.187-.71 0l-4 3.993c-.49.488.238 1.18.71.71zM14 3.5V14H3.5c-.65 0-.655 1 0 1H14v10.5c0 .67 1 .665 1 0V15h10.5c.667 0 .665-1 0-1H15V3.5c0-.682-1-.638-1 0z"></path> </g> </g></svg>`;
     lofiPlayer.appendChild(dragHandle);
 
     let isDragging = false;
