@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mio</title>
-    <!-- Intégration de Tailwind CSS pour le style de base -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Importation de la nouvelle police Quicksand depuis Google Fonts -->
+    <!-- Le script Tailwind a été supprimé -->
+    <!-- Importation de la police Quicksand depuis Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
@@ -15,59 +14,59 @@
     <!-- Ajout de la favicon -->
     <link rel="icon" type="image/png" href="images\miohome.png">
 </head>
-<body class="text-slate-400 antialiased">
+<body>
 
     <!-- Conteneur pour l'animation d'arrière-plan -->
     <div class="background-container">
         <div class="shooting-stars"></div>
     </div>
 
-    <div id="gallery-overlay" class="fixed inset-0 bg-black/0 pointer-events-none transition-all duration-500 z-40"></div>
+    <div id="gallery-overlay" class="gallery-overlay"></div>
 
     <!-- Élément audio pour le son de clic sur les boutons -->
     <audio id="click-sound">
         <source src="https://www.soundjay.com/buttons/sounds/button-30.mp3" type="audio/mpeg">
     </audio>
 
-    <div id="app" class="min-h-screen flex flex-col">
+    <div id="app">
 
-        <header class="bg-black/10 backdrop-blur-sm shadow-lg sticky top-0 z-50">
-            <nav class="container mx-auto px-6 py-4 flex justify-between items-center text-slate-300">
-                <a href="#" class="flex items-center text-xl md:text-2xl font-bold">
-                    <img src="images\miohome.png" alt="Mio Logo" class="w-10 h-10 rounded-full mr-4 border-2 border-slate-300/50">
+        <header class="main-header">
+            <nav class="main-nav container">
+                <a href="#" class="logo-link">
+                    <img src="images\miohome.png" alt="Mio Logo" class="logo-img">
                     <span>Mio</span>
                 </a>
 
                 <!-- Menu pour ordinateur -->
-                <div class="hidden md:flex items-center space-x-2">
-                    <button data-page="home" class="nav-button active px-4 py-2 rounded-lg hover:bg-white/20 transition-colors duration-300">Home</button>
-                    <button data-page="gallery" class="nav-button px-4 py-2 rounded-lg hover:bg-white/20 transition-colors duration-300">Gallery</button>
+                <div class="desktop-menu">
+                    <button data-page="home" class="nav-button active">Home</button>
+                    <button data-page="gallery" class="nav-button">Gallery</button>
                 </div>
 
                 <!-- Bouton Hamburger pour mobile -->
-                <div class="md:hidden flex items-center">
-                    <button id="hamburger-button" class="text-slate-300 focus:outline-none p-2 rounded-lg hover:bg-white/20 transition-colors duration-300">
-                        <svg id="hamburger-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                        <svg id="close-icon" class="w-8 h-8 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                <div class="hamburger-container">
+                    <button id="hamburger-button">
+                        <svg id="hamburger-icon" class="hamburger-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                        <svg id="close-icon" class="hamburger-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
                 </div>
             </nav>
             
             <!-- Menu Mobile -->
-            <div id="mobile-menu" class="md:hidden">
-                <div class="flex flex-col items-center space-y-2">
-                    <button data-page="home" class="nav-button active w-full text-center px-4 py-2 hover:bg-white/20 transition-colors duration-300">Home</button>
-                    <button data-page="gallery" class="nav-button w-full text-center px-4 py-2 hover:bg-white/20 transition-colors duration-300">Gallery</button>
+            <div id="mobile-menu">
+                <div class="mobile-menu-content">
+                    <button data-page="home" class="nav-button active">Home</button>
+                    <button data-page="gallery" class="nav-button">Gallery</button>
                 </div>
             </div>
         </header>
 
-        <!-- Conteneur principal avec padding responsive -->
-        <main id="content-area" class="flex-grow container mx-auto p-4 md:p-8">
+        <!-- Conteneur principal -->
+        <main id="content-area" class="container main-content">
             <!-- Le contenu sera injecté ici par JavaScript -->
         </main>
 
-        <footer class="bg-transparent text-slate-300/70 text-center py-4 mt-auto">
+        <footer class="main-footer">
             <p>&copy; 2025 Mio. All Rights Reserved.</p>
         </footer>
     </div>
@@ -87,4 +86,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

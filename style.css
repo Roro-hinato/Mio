@@ -1,9 +1,61 @@
 /* Définition de la couleur de fond principale et de la police */
+
+/*
+  NOUVEAU : Règles globales pour masquer la barre de défilement du navigateur.
+  En ciblant 'html' et 'body', on assure une compatibilité maximale
+  entre les navigateurs (Chrome, Firefox, Edge, etc.).
+*/
+html, body {
+    /* Cache la barre de défilement pour Firefox */
+    scrollbar-width: none;
+    /* Cache la barre de défilement pour Internet Explorer et Edge */
+    -ms-overflow-style: none;
+}
+
+/* Cache la barre de défilement pour les navigateurs basés sur Webkit (Chrome, Safari) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+}
+
 body {
     background-color: #020617; /* Fond uni de secours */
     font-family: 'Quicksand', sans-serif; /* Nouvelle police douce */
     overflow-x: hidden;
+    overflow-y: auto; /* Autorise le scroll par défaut */
+    color: #94a3b8; /* text-slate-400 */
+    -webkit-font-smoothing: antialiased; /* antialiased */
+    -moz-osx-font-smoothing: grayscale;
 }
+
+/* Règle pour bloquer le scroll sur la page d'accueil (desktop uniquement) */
+@media (min-width: 768px) {
+    body.home-view {
+        overflow-y: hidden;
+    }
+}
+
+
+/* --- Styles de base et mise en page --- */
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem; /* px-6 */
+    padding-right: 1.5rem; /* px-6 */
+}
+
+/* Points de rupture responsifs pour le conteneur */
+@media (min-width: 640px) { .container { max-width: 640px; } }
+@media (min-width: 768px) { .container { max-width: 768px; } }
+@media (min-width: 1024px) { .container { max-width: 1024px; } }
+@media (min-width: 1280px) { .container { max-width: 1280px; } }
 
 
 /* --- Animation du ciel étoilé en arrière-plan --- */
@@ -18,14 +70,12 @@ body {
     overflow: hidden;
 }
 
-/* Keyframes pour le scintillement des étoiles */
 @keyframes twinkle {
     0% { opacity: 0.3; }
     50% { opacity: 1; }
     100% { opacity: 0.3; }
 }
 
-/* Utilisation des pseudo-éléments pour créer les couches d'étoiles */
 .background-container::before,
 .background-container::after {
     content: '';
@@ -38,25 +88,20 @@ body {
     border-radius: 50%;
 }
 
-/* Couche 1 : Étoiles petites et denses */
 .background-container::before {
     animation: twinkle 8s ease-in-out infinite;
     filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.8));
-    /* Génération d'un grand nombre d'étoiles réparties sur tout l'écran */
     box-shadow: 7vw 86vh #FFF, 82vw 82vh #FFF, 85vw 23vh #FFF, 62vw 14vh #FFF, 8vw 53vh #FFF, 81vw 60vh #FFF, 59vw 94vh #FFF, 58vw 1vh #FFF, 48vw 15vh #FFF, 6vw 4vh #FFF, 12vw 14vh #FFF, 42vw 82vh #FFF, 3vw 69vh #FFF, 66vw 91vh #FFF, 81vw 9vh #FFF, 41vw 95vh #FFF, 66vw 81vh #FFF, 91vw 12vh #FFF, 84vw 35vh #FFF, 67vw 2vh #FFF, 4vw 7vh #FFF, 80vw 21vh #FFF, 34vw 1vh #FFF, 12vw 92vh #FFF, 99vw 81vh #FFF, 65vw 86vh #FFF, 54vw 43vh #FFF, 11vw 22vh #FFF, 85vw 3vh #FFF, 16vw 85vh #FFF, 5vw 79vh #FFF, 54vw 2vh #FFF, 10vw 98vh #FFF, 94vw 38vh #FFF, 21vw 98vh #FFF, 45vw 68vh #FFF, 71vw 82vh #FFF, 25vw 80vh #FFF, 2vw 91vh #FFF, 76vw 5vh #FFF, 43vw 95vh #FFF, 13vw 81vh #FFF, 90vw 55vh #FFF, 66vw 41vh #FFF, 40vw 43vh #FFF, 84vw 46vh #FFF, 48vw 80vh #FFF, 68vw 82vh #FFF, 82vw 80vh #FFF, 94vw 97vh #FFF;
 }
 
-/* Couche 2 : Étoiles plus grandes et plus lentes */
 .background-container::after {
     width: 2px;
     height: 2px;
     animation: twinkle 10s ease-in-out infinite -4s;
     filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
-    /* Génération d'étoiles plus grosses réparties sur tout l'écran */
     box-shadow: 46vw 4vh #FFF, 8vw 38vh #FFF, 63vw 32vh #FFF, 23vw 22vh #FFF, 41vw 8vh #FFF, 82vw 27vh #FFF, 28vw 52vh #FFF, 76vw 91vh #FFF, 93vw 85vh #FFF, 4vw 87vh #FFF, 13vw 80vh #FFF, 66vw 93vh #FFF, 81vw 48vh #FFF, 95vw 12vh #FFF, 35vw 3vh #FFF, 7vw 3vh #FFF, 58vw 98vh #FFF, 99vw 8vh #FFF, 41vw 92vh #FFF, 82vw 88vh #FFF, 18vw 63vh #FFF, 84vw 72vh #FFF, 74vw 10vh #FFF, 51vw 35vh #FFF, 2vw 41vh #FFF, 94vw 46vh #FFF, 16vw 87vh #FFF, 87vw 6vh #FFF, 43vw 75vh #FFF, 20vw 48vh #FFF, 59vw 42vh #FFF, 71vw 29vh #FFF, 5vw 42vh #FFF, 9vw 7vh #FFF, 89vw 59vh #FFF, 53vw 84vh #FFF, 3vw 16vh #FFF, 31vw 79vh #FFF, 28vw 98vh #FFF, 99vw 64vh #FFF;
 }
 
-/* --- Animation des étoiles filantes --- */
 .shooting-stars {
     position: absolute;
     top: 0;
@@ -67,32 +112,20 @@ body {
 }
 
 @keyframes shoot {
-    0% {
-        transform: translateX(0) translateY(0) rotate(-45deg);
-        opacity: 1;
-    }
-    /* La trajectoire visible ne dure que 10% du temps total de l'animation */
-    10% {
-        transform: translateX(-100vw) translateY(100vh) rotate(-45deg);
-        opacity: 0;
-    }
-    /* Le reste du temps, l'étoile est invisible */
-    100% {
-        transform: translateX(-100vw) translateY(100vh) rotate(-45deg);
-        opacity: 0;
-    }
+    0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+    10% { transform: translateX(-100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
+    100% { transform: translateX(-100vw) translateY(100vh) rotate(-45deg); opacity: 0; }
 }
 
 .shooting-stars::before,
 .shooting-stars::after {
     content: '';
     position: absolute;
-    width: 150px; /* Longueur de la traînée */
+    width: 150px;
     height: 2px;
-    /* Gradient corrigé pour que la tête soit à l'avant */
     background: linear-gradient(to right, rgba(255, 255, 255, 1) 5%, transparent 100%);
     border-radius: 999px;
-    filter: drop-shadow(0 0 6px #fff); /* Ajout d'une lueur globale */
+    filter: drop-shadow(0 0 6px #fff);
     opacity: 0;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
@@ -101,46 +134,328 @@ body {
 
 .shooting-stars::before {
     top: 10vh;
-    left: 100vw; /* Commence hors de l'écran à droite */
-    /* Cycle total de 17 secondes, démarre après 3 secondes */
+    left: 100vw;
     animation-duration: 17s;
     animation-delay: 3s;
 }
 
 .shooting-stars::after {
     top: 40vh;
-    left: 100vw; /* Commence hors de l'écran à droite */
-    /* Cycle total de 23 secondes, démarre après 12 secondes pour éviter les superpositions */
+    left: 100vw;
     animation-duration: 23s;
     animation-delay: 12s;
 }
 /* --- Fin de l'animation --- */
 
+/* --- Header --- */
+.main-header {
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
 
-/* Style pour une transition douce du contenu */
-#content-area > div {
+.main-nav {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d1d5db; /* text-slate-300 */
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    font-size: 1.25rem; /* text-xl */
+    line-height: 1.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-img {
+    width: 2.5rem; /* w-10 */
+    height: 2.5rem; /* h-10 */
+    border-radius: 9999px; /* rounded-full */
+    margin-right: 1rem; /* mr-4 */
+    border: 2px solid rgba(209, 213, 219, 0.5); /* border-2 border-slate-300/50 */
+}
+
+.desktop-menu {
+    display: none; /* hidden */
+}
+
+.nav-button {
+    padding: 0.5rem 1rem; /* px-4 py-2 */
+    border-radius: 0.5rem; /* rounded-lg */
+    transition: color 300ms, background-color 300ms; /* transition-colors duration-300 */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+}
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* hover:bg-white/20 */
+}
+.nav-button.active {
+    background-color: rgba(30, 58, 138, 0.8);
+    color: #DBEAFE;
+    font-weight: 600;
+}
+
+.hamburger-container {
+    display: flex;
+    align-items: center;
+}
+#hamburger-button {
+    color: #d1d5db;
+    outline: none;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 300ms;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+#hamburger-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+.hamburger-icon {
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+}
+.hidden {
+    display: none;
+}
+
+#mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out, padding-bottom 0.5s ease-in-out, border-top-width 0.3s ease-in-out;
+    border-top: 0px solid rgba(191, 219, 254, 0.2);
+}
+#mobile-menu.open {
+    max-height: 300px;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    border-top-width: 1px;
+}
+
+.mobile-menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.mobile-menu-content > * + * {
+    margin-top: 0.5rem; /* space-y-2 */
+}
+#mobile-menu .nav-button {
+    color: #60A5FA;
+    width: 100%;
+    text-align: center;
+}
+#mobile-menu .nav-button:hover {
+    color: #BFDBFE;
+}
+#mobile-menu .nav-button.active {
+    color: #DBEAFE;
+}
+
+
+/* --- Main Content --- */
+.main-content {
+    flex-grow: 1;
+    padding-top: 1rem; /* p-4 */
+    padding-bottom: 1rem;
+}
+.main-content.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.main-content > div { /* Pour l'animation fadeIn */
     animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Style pour le bouton actif dans le menu */
-.nav-button.active {
-    background-color: rgba(30, 58, 138, 0.8); /* Fond bleu plus foncé (blue-800) */
-    color: #DBEAFE; /* Police bleu clair (blue-100) */
-    font-weight: 600; /* Police un peu plus grasse pour le démarquer */
+/* --- Page d'accueil --- */
+.home-card {
+    width: 100%;
+    max-width: 42rem; /* max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(15, 23, 42, 0.75); /* bg-slate-900/75 */
+    border-radius: 1rem; /* rounded-2xl */
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); /* shadow-xl */
+    padding: 2rem; /* p-8 */
+    backdrop-filter: blur(4px);
+    border: 1px solid #334155; /* border-slate-700 */
+    animation: float 4s ease-in-out infinite;
+}
+.home-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-pic-container {
+    flex-shrink: 0;
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+.profile-pic {
+    width: 8rem; /* w-32 */
+    height: 8rem; /* h-32 */
+    border-radius: 9999px; /* rounded-full */
+    border: 4px solid #3b82f6; /* border-4 border-blue-500 */
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+}
+.profile-text {
+    text-align: center;
+}
+.profile-title {
+    font-size: 2.25rem; /* text-4xl */
+    line-height: 2.5rem;
+    font-weight: 700;
+    color: #60a5fa; /* text-blue-400 */
+}
+.profile-subtitle {
+    font-size: 1.125rem; /* text-lg */
+    line-height: 1.75rem;
+    color: #94a3b8; /* text-slate-400 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+.divider {
+    border-color: rgba(51, 65, 85, 0.5); /* border-slate-700/50 */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.profile-description {
+    font-size: 1rem; /* text-base */
+    line-height: 1.5rem;
+    color: #94a3b8;
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+.social-links {
+    margin-top: 1.5rem; /* mt-6 */
+    display: flex;
+    justify-content: center;
+}
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem; /* px-6 py-3 */
+    background-color: rgba(30, 41, 59, 0.5); /* bg-slate-800/50 */
+    border: 1px solid #334155; /* border-slate-700 */
+    border-radius: 0.5rem; /* rounded-lg */
+    color: #d1d5db; /* text-slate-300 */
+    text-decoration: none;
+    transition: all 300ms;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow-lg */
+}
+.social-link:hover {
+    background-color: rgba(51, 65, 85, 0.7); /* hover:bg-slate-700/70 */
+    color: white; /* hover:text-white */
+}
+.social-link-icon {
+    width: 1.5rem; /* w-6 */
+    height: 1.5rem; /* h-6 */
+    margin-right: 0.75rem; /* mr-3 */
 }
 
-/* --- Styles pour la Lightbox --- */
+
+/* --- Page Galerie --- */
+.gallery-section {
+    margin-bottom: 3rem; /* mb-12 */
+}
+.gallery-title {
+    font-size: 3rem; /* text-5xl */
+    line-height: 1;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    color: #d1d5db;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.gallery-title .logo-img { /* Réutilisation du style */
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem; /* gap-4 */
+}
+.gallery-item {
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 20px 25px -5px rgba(30, 58, 138, 0.3), 0 8px 10px -6px rgba(30, 58, 138, 0.3); /* shadow-xl shadow-blue-900/30 */
+    position: relative; /* Pour le survol */
+}
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 500ms;
+    cursor: pointer;
+}
+.gallery-item:hover .gallery-image {
+    transform: scale(1.1);
+}
+.gallery-item .object-pos-custom {
+    object-position: 75% 50%;
+}
+.gallery-hr {
+    border-color: rgba(51, 65, 85, 0.5); /* border-slate-700/50 */
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+}
+
+
+/* --- Footer --- */
+.main-footer {
+    background-color: transparent;
+    color: rgba(209, 213, 219, 0.7); /* text-slate-300/70 */
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-top: auto;
+}
+
+/* --- Superposition et surbrillance galerie --- */
+.gallery-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    transition: all 500ms;
+    z-index: 40;
+}
+.gallery-overlay.active {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.gallery-item-highlighted {
+    position: relative;
+    z-index: 45;
+}
+
+
+/* --- Styles pour la Lightbox (inchangés) --- */
 #lightbox {
     position: fixed;
     top: 0;
@@ -154,17 +469,8 @@ body {
     justify-content: center;
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
-
-#lightbox.lightbox-hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-#lightbox.lightbox-visible {
-    opacity: 1;
-    visibility: visible;
-}
-
+#lightbox.lightbox-hidden { opacity: 0; visibility: hidden; }
+#lightbox.lightbox-visible { opacity: 1; visibility: visible; }
 #lightbox img {
     max-width: 90vw;
     max-height: 85vh;
@@ -172,7 +478,6 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 30px rgba(0,0,0,0.5);
 }
-
 .lightbox-close, .lightbox-prev, .lightbox-next {
     position: absolute;
     background: transparent;
@@ -184,30 +489,12 @@ body {
     padding: 1rem;
     line-height: 1;
 }
-.lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
-    color: #BFDBFE;
-}
+.lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover { color: #BFDBFE; }
+.lightbox-close { top: 10px; right: 20px; font-size: 3.5rem; }
+.lightbox-prev { left: 10px; top: 50%; transform: translateY(-50%); }
+.lightbox-next { right: 10px; top: 50%; transform: translateY(-50%); }
 
-.lightbox-close {
-    top: 10px;
-    right: 20px;
-    font-size: 3.5rem;
-}
-
-.lightbox-prev {
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.lightbox-next {
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-
-/* Style pour le lecteur radio Lo-Fi responsive et déplaçable */
+/* --- Style pour le lecteur radio Lo-Fi (inchangés) --- */
 #lofi-player {
     position: fixed;
     z-index: 100;
@@ -222,105 +509,95 @@ body {
     height: 141px;
     bottom: 40px;
     right: 10px;
-    overflow: visible; /* Changé pour voir la poignée si elle dépasse */
+    overflow: visible;
     user-select: none;
     -webkit-user-select: none;
 }
-
-/* Règle cruciale : désactive les événements de la souris sur l'iframe LORSQUE le déplacement est en cours */
-#lofi-player.dragging iframe {
-    pointer-events: none;
-}
-
-#lofi-player iframe {
-    display: block;
-    border-radius: 12px;
-    width: 100%;
-    height: 100%;
-}
-
-/* Style de la poignée de déplacement */
+#lofi-player.dragging iframe { pointer-events: none; }
+#lofi-player iframe { display: block; border-radius: 12px; width: 100%; height: 100%; }
 .lofi-drag-handle {
     position: absolute;
-    top: -28px; /* Positionne la poignée au-dessus du lecteur */
+    top: -28px;
     left: 50%;
     transform: translateX(-50%);
     width: 60px;
     height: 28px;
     background-color: rgba(0, 0, 0, 0.4);
     cursor: move;
-    z-index: 101; /* Doit être au-dessus de l'iframe */
+    z-index: 101;
     border-radius: 8px 8px 0 0;
     display: flex;
     align-items: center;
     justify-content: center;
     color: rgba(255, 255, 255, 0.5);
 }
-
-.lofi-drag-handle svg {
-    width: 24px;
-    height: 24px;
-    transform: rotate(90deg);
-}
+.lofi-drag-handle svg { width: 24px; height: 24px; transform: rotate(90deg); }
 
 
-/* Animation et style du menu mobile */
-#mobile-menu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out, padding-bottom 0.5s ease-in-out, border-top-width 0.3s ease-in-out;
-    border-top: 0px solid rgba(191, 219, 254, 0.2);
-}
-
-#mobile-menu.open {
-    max-height: 300px; /* Hauteur suffisante pour les boutons */
-    padding-top: 0.5rem;
-    padding-bottom: 1rem;
-    border-top-width: 1px;
-}
-
-/* Couleur du texte pour les boutons du menu mobile */
-#mobile-menu .nav-button {
-    color: #60A5FA; /* Un bleu clair qui correspond au thème */
-}
-#mobile-menu .nav-button:hover {
-    color: #BFDBFE; /* Revient à la couleur très claire originale au survol */
-}
-/* Le bouton actif doit conserver son style spécifique */
-#mobile-menu .nav-button.active {
-    color: #DBEAFE;
-}
-
-/* Animation de flottement pour la carte de présentation */
+/* --- Animation de flottement (inchangée) --- */
 @keyframes float {
-    0% {
-        transform: translate3d(0, 0, 0);
-    }
-    50% {
-        transform: translate3d(0, -10px, 0);
-    }
-    100% {
-        transform: translate3d(0, 0, 0);
-    }
+    0% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -10px, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }
 
-.animate-float {
-    animation: float 4s ease-in-out infinite;
+/* --- Media Queries pour la responsivité --- */
+@media (min-width: 768px) { /* md */
+    .logo-link {
+        font-size: 1.5rem; /* md:text-2xl */
+        line-height: 2rem;
+    }
+    .desktop-menu {
+        display: flex;
+        align-items: center;
+    }
+    .desktop-menu > * + * {
+        margin-left: 0.5rem; /* space-x-2 */
+    }
+    .hamburger-container { display: none; }
+    #mobile-menu { display: none; }
+    .main-content {
+        padding: 2rem; /* md:p-8 */
+    }
+    .home-card {
+        max-width: 56rem; /* md:max-w-4xl */
+        padding: 3rem; /* md:p-12 */
+    }
+    .home-card-content {
+        flex-direction: row;
+    }
+    .profile-pic-container {
+        margin-bottom: 0;
+        margin-right: 3rem; /* md:mr-12 */
+    }
+    .profile-pic {
+        width: 12rem; /* md:w-48 */
+        height: 12rem; /* md:h-48 */
+    }
+    .profile-text { text-align: left; }
+    .profile-title {
+        font-size: 3rem; /* md:text-5xl */
+        line-height: 1;
+    }
+    .profile-subtitle, .profile-description {
+        font-size: 1.25rem; /* md:text-xl */
+        line-height: 1.75rem;
+    }
+    .social-links { justify-content: flex-start; }
+    .gallery-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-/* Le lecteur passe à sa taille supérieure à partir de 1024px pour éviter de chevaucher le contenu sur tablette */
-@media (min-width: 1024px) { /* lg breakpoint de Tailwind, anciennement md (768px) */
+@media (min-width: 640px) { /* sm */
+    .gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) { /* lg */
+    .gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     #lofi-player {
         width: 300px;
         height: 169px;
         bottom: 20px;
         right: 20px;
     }
-}
-
-/* Style pour l'élément de la galerie mis en surbrillance */
-.gallery-item-highlighted {
-    position: relative; /* Nécessaire pour que z-index fonctionne */
-    z-index: 45;
 }
 
