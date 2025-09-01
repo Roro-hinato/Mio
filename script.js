@@ -1,9 +1,51 @@
+// --- Procédure de chargement fiable pour l'API YouTube ---
+// 1. On crée une balise <script> dynamiquement.
+const tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+// 2. On trouve la première balise <script> de la page.
+const firstScriptTag = document.getElementsByTagName('script')[0];
+// 3. On insère notre nouvelle balise AVANT la première, pour lancer le chargement.
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+
+// --- Initialisation du lecteur YouTube via l'API IFrame ---
+
+// La variable `player` est déclarée ici pour être accessible globalement dans ce script.
+let player;
+
+// 4. Cette fonction globale est appelée par l'API une fois le script téléchargé.
+//    Comme notre code est déjà chargé, cette fonction existera toujours à temps.
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('youtube-player', {
+    height: '100%',
+    width: '100%',
+    videoId: 'xbibCPr7R6Y',
+    playerVars: {
+      'autoplay': 1,
+      'controls': 0,
+      'loop': 1,
+      'iv_load_policy': 3,   // Masque les annotations vidéo
+      'modestbranding': 1,   // Réduit le logo YouTube
+      'rel': 0               // Empêche les vidéos recommandées d'autres chaînes à la fin
+    },
+    events: {
+      'onReady': onPlayerReady
+    }
+  });
+}
+
+// 5. Cette fonction s'exécute une fois le lecteur vidéo prêt.
+function onPlayerReady(event) {
+  event.target.setVolume(25);
+  event.target.playVideo();
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- Configuration de la Galerie ---
-    const IMAGES_PER_PAGE = 8;
+    const IMAGES_PER_PAGE = 12;
     
-    // Structure de données pour la galerie
     const galleries = {
         mio: {
             icon: 'images/miohome.png',
@@ -14,22 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 { src: 'images/mio4.png' },
                 { src: 'images/mio5.png', className: 'object-pos-custom' },
                 { src: 'images/mio6.png' },
-                // Ajoutez plus d'images ici pour tester la pagination, par exemple :
             ]
         }
     };
 
-    // État pour suivre la page actuelle de chaque galerie
     let galleryState = {
         mio: { currentPage: 1 }
     };
 
-    // Génère le HTML pour une seule page de la galerie
     function createGalleryHTML(galleryName, galleryData, page) {
         const totalImages = galleryData.images.length;
         const totalPages = Math.ceil(totalImages / IMAGES_PER_PAGE);
-        
-        // Calcule les images à afficher pour la page actuelle
         const startIndex = (page - 1) * IMAGES_PER_PAGE;
         const endIndex = page * IMAGES_PER_PAGE;
         const paginatedImages = galleryData.images.slice(startIndex, endIndex);
@@ -67,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
     
-    // Contenu des pages avec les nouvelles classes CSS
     const pageContent = {
         home: `
             <div>
@@ -96,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `,
-        // La galerie est maintenant générée dynamiquement dans renderContent
         gallery: `` 
     };
 
@@ -110,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const clickSound = document.getElementById('click-sound');
     const titleLink = document.querySelector('header nav a');
 
-    // --- Logique audio ---
     function unlockAllAudio() {
         if (clickSound) {
             clickSound.play().then(() => {
@@ -135,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Logique de survol de la galerie ---
     contentArea.addEventListener('mouseover', (e) => {
         if (e.target.tagName === 'IMG' && e.target.closest('.gallery-item')) {
             galleryOverlay.classList.add('active');
@@ -150,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // --- Logique Lightbox ---
     let currentGallery = '';
     let currentIndex = 0;
     const lightbox = document.createElement('div');
@@ -189,24 +221,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'auto';
     }
     
-    // --- Gestion des clics (Lightbox et Pagination) ---
     contentArea.addEventListener('click', e => {
-        // Clic sur une image pour ouvrir la lightbox
         if (e.target.tagName === 'IMG' && e.target.dataset.gallery) {
             openLightbox(e.target.dataset.gallery, e.target.dataset.index);
         }
-        // Clic sur un bouton de pagination
+
         if (e.target.matches('.pagination-button')) {
+            playClickSound();
             const galleryName = e.target.dataset.gallery;
             const direction = parseInt(e.target.dataset.direction, 10);
             galleryState[galleryName].currentPage += direction;
             renderContent('gallery');
-            
-            // Fait défiler la page en haut en douceur
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            const galleryNavButton = document.querySelector('.desktop-menu .nav-button[data-page="gallery"]');
+            if (galleryNavButton) {
+                galleryNavButton.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        if (e.target.closest('.social-link')) {
+            playClickSound();
         }
     });
 
@@ -230,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // --- Navigation et rendu ---
     function renderContent(page) {
         document.body.classList.remove('home-view', 'gallery-view');
         contentArea.classList.remove('flex-center');
@@ -281,11 +313,14 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', (event) => {
             playClickSound();
             const page = event.currentTarget.dataset.page;
-            // Réinitialise la page de la galerie si on y retourne
             if (page === 'gallery') {
                 Object.keys(galleryState).forEach(key => galleryState[key].currentPage = 1);
             }
             renderContent(page);
+
+            // Ajout du défilement vers le haut lorsque le bouton Gallery est cliqué
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             if (mobileMenu.classList.contains('open')) {
                 mobileMenu.classList.remove('open');
                 hamburgerIcon.classList.remove('hidden');
@@ -301,10 +336,8 @@ document.addEventListener('DOMContentLoaded', () => {
         closeIcon.classList.toggle('hidden');
     });
 
-    // Initialisation
     renderContent('home');
 
-    // --- Lecteur Lo-Fi déplaçable ---
     const lofiPlayer = document.getElementById('lofi-player');
     const dragHandle = document.createElement('div');
     dragHandle.className = 'lofi-drag-handle';
@@ -371,4 +404,3 @@ document.addEventListener('DOMContentLoaded', () => {
     dragHandle.addEventListener('mousedown', startDrag);
     dragHandle.addEventListener('touchstart', startDrag);
 });
-
