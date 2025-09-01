@@ -4,7 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const galleries = {
         mio: {
             icon: 'images/miohome.png',
-            images: Array.from({length: 6}).map((_, i) => `images/mio${i + 1}.png`)
+            // La structure des images est maintenant un tableau d'objets
+            // pour permettre des classes de style personnalisées.
+            images: [
+                { src: 'images/mio1.png' },
+                { src: 'images/mio2.png' },
+                { src: 'images/mio3.png' },
+                { src: 'images/mio4.png' },
+                { 
+                  src: 'images/mio5.png', 
+                  className: 'object-[75%_50%]' // Le focus est ajusté pour être moins à droite
+                },
+                { src: 'images/mio6.png' }
+            ]
         }
     };
 
@@ -17,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${galleryName}</span>
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    ${galleryData.images.map((imgSrc, i) => `
-                        <div class="group overflow-hidden rounded-lg shadow-xl shadow-blue-900/30">
-                            <img src="${imgSrc}" alt="Photo ${galleryName} ${i + 1}" 
-                                 class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 cursor-pointer"
+                    ${galleryData.images.map((img, i) => `
+                        <div class="group aspect-[9/16] overflow-hidden rounded-lg shadow-xl shadow-blue-900/30">
+                            <img src="${img.src}" alt="Photo ${galleryName} ${i + 1}" 
+                                 class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 cursor-pointer ${img.className || ''}"
                                  data-gallery="${galleryName}" 
                                  data-index="${i}">
                         </div>
@@ -146,13 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
     lightbox.appendChild(lightboxNext);
 
     function showImage(gallery, index) {
+        // La source de l'image est maintenant dans la propriété 'src' de l'objet
         const images = galleries[gallery].images;
         if (!images || index < 0 || index >= images.length) {
             return;
         }
         currentGallery = gallery;
         currentIndex = index;
-        lightboxImage.src = images[currentIndex];
+        lightboxImage.src = images[currentIndex].src;
     }
 
     function openLightbox(gallery, index) {
