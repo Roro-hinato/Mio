@@ -1,0 +1,213 @@
+/* Définition de la couleur de fond principale et de la police */
+body {
+    background-image: linear-gradient(45deg, #020617 0%, #0F172A 100%);
+    font-family: 'Fraunces', serif;
+}
+
+/* Style pour une transition douce du contenu */
+#content-area > div {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Style pour le bouton actif dans le menu */
+.nav-button.active {
+    background-color: rgba(30, 58, 138, 0.8); /* Fond bleu plus foncé (blue-800) */
+    color: #DBEAFE; /* Police bleu clair (blue-100) */
+    font-weight: 600; /* Police un peu plus grasse pour le démarquer */
+}
+
+/* --- Styles pour la Lightbox --- */
+#lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#lightbox.lightbox-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#lightbox.lightbox-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+#lightbox img {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.lightbox-close, .lightbox-prev, .lightbox-next {
+    position: absolute;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 1rem;
+    line-height: 1;
+}
+.lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover {
+    color: #BFDBFE;
+}
+
+.lightbox-close {
+    top: 10px;
+    right: 20px;
+    font-size: 3.5rem;
+}
+
+.lightbox-prev {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lightbox-next {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+/* Style pour le lecteur radio Lo-Fi responsive et déplaçable */
+#lofi-player {
+    position: fixed;
+    z-index: 100;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 12px;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+    width: 250px;
+    height: 141px;
+    bottom: 40px;
+    right: 10px;
+    overflow: visible; /* Changé pour voir la poignée si elle dépasse */
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Règle cruciale : désactive les événements de la souris sur l'iframe LORSQUE le déplacement est en cours */
+#lofi-player.dragging iframe {
+    pointer-events: none;
+}
+
+#lofi-player iframe {
+    display: block;
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+}
+
+/* Style de la poignée de déplacement */
+.lofi-drag-handle {
+    position: absolute;
+    top: -28px; /* Positionne la poignée au-dessus du lecteur */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 28px;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: move;
+    z-index: 101; /* Doit être au-dessus de l'iframe */
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.lofi-drag-handle svg {
+    width: 24px;
+    height: 24px;
+    transform: rotate(90deg);
+}
+
+
+/* Animation et style du menu mobile */
+#mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out, padding-top 0.5s ease-in-out, padding-bottom 0.5s ease-in-out, border-top-width 0.3s ease-in-out;
+    border-top: 0px solid rgba(191, 219, 254, 0.2);
+}
+
+#mobile-menu.open {
+    max-height: 300px; /* Hauteur suffisante pour les boutons */
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
+    border-top-width: 1px;
+}
+
+/* Couleur du texte pour les boutons du menu mobile */
+#mobile-menu .nav-button {
+    color: #60A5FA; /* Un bleu clair qui correspond au thème */
+}
+#mobile-menu .nav-button:hover {
+    color: #BFDBFE; /* Revient à la couleur très claire originale au survol */
+}
+/* Le bouton actif doit conserver son style spécifique */
+#mobile-menu .nav-button.active {
+    color: #DBEAFE;
+}
+
+/* Animation de flottement pour la carte de présentation */
+@keyframes float {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(0, -10px, 0);
+    }
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Le lecteur passe à sa taille supérieure à partir de 1024px pour éviter de chevaucher le contenu sur tablette */
+@media (min-width: 1024px) { /* lg breakpoint de Tailwind, anciennement md (768px) */
+    #lofi-player {
+        width: 300px;
+        height: 169px;
+        bottom: 20px;
+        right: 20px;
+    }
+}
+
+/* Style pour l'élément de la galerie mis en surbrillance */
+.gallery-item-highlighted {
+    position: relative; /* Nécessaire pour que z-index fonctionne */
+    z-index: 45;
+}
+
