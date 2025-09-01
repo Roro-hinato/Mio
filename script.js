@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Configuration de la Galerie ---
+    const IMAGES_PER_PAGE = 8;
+    
     // Structure de données pour la galerie
     const galleries = {
         mio: {
@@ -10,13 +13,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 { src: 'images/mio3.png' },
                 { src: 'images/mio4.png' },
                 { src: 'images/mio5.png', className: 'object-pos-custom' },
-                { src: 'images/mio6.png' }
+                { src: 'images/mio6.png' },
+                // Ajoutez plus d'images ici pour tester la pagination, par exemple :
             ]
         }
     };
 
-    // MODIFICATION : La fonction génère maintenant des balises <img> avec le 'src' direct.
-    function createGalleryHTML(galleryName, galleryData) {
+    // État pour suivre la page actuelle de chaque galerie
+    let galleryState = {
+        mio: { currentPage: 1 }
+    };
+
+    // Génère le HTML pour une seule page de la galerie
+    function createGalleryHTML(galleryName, galleryData, page) {
+        const totalImages = galleryData.images.length;
+        const totalPages = Math.ceil(totalImages / IMAGES_PER_PAGE);
+        
+        // Calcule les images à afficher pour la page actuelle
+        const startIndex = (page - 1) * IMAGES_PER_PAGE;
+        const endIndex = page * IMAGES_PER_PAGE;
+        const paginatedImages = galleryData.images.slice(startIndex, endIndex);
+
+        let paginationHTML = '';
+        if (totalPages > 1) {
+            paginationHTML = `
+                <div class="pagination-controls">
+                    <button class="pagination-button" data-gallery="${galleryName}" data-direction="-1" ${page === 1 ? 'disabled' : ''}>Précédent</button>
+                    <span class="page-indicator">Page ${page} / ${totalPages}</span>
+                    <button class="pagination-button" data-gallery="${galleryName}" data-direction="1" ${page === totalPages ? 'disabled' : ''}>Suivant</button>
+                </div>
+            `;
+        }
+
         return `
             <div class="gallery-section">
                 <h2 class="gallery-title">
@@ -24,16 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>${galleryName}</span>
                 </h2>
                 <div class="gallery-grid">
-                    ${galleryData.images.map((img, i) => `
+                    ${paginatedImages.map((img, i) => `
                         <div class="gallery-item">
                             <img src="${img.src}" 
                                  alt="Photo ${galleryName} ${i + 1}" 
                                  class="gallery-image ${img.className || ''}"
                                  data-gallery="${galleryName}" 
-                                 data-index="${i}">
+                                 data-index="${startIndex + i}">
                         </div>
                     `).join('')}
                 </div>
+                ${paginationHTML}
             </div>
         `;
     }
@@ -67,17 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `,
-        gallery: `
-            <div class="w-full">
-                ${Object.keys(galleries).map((galleryName, index, array) => {
-                    const galleryHTML = createGalleryHTML(galleryName, galleries[galleryName]);
-                    if (index < array.length - 1) {
-                        return galleryHTML + `<hr class="gallery-hr">`;
-                    }
-                    return galleryHTML;
-                }).join('')}
-            </div>
-        `
+        // La galerie est maintenant générée dynamiquement dans renderContent
+        gallery: `` 
     };
 
     const contentArea = document.getElementById('content-area');
@@ -168,11 +188,28 @@ document.addEventListener('DOMContentLoaded', () => {
         lightbox.classList.replace('lightbox-visible', 'lightbox-hidden');
         document.body.style.overflow = 'auto';
     }
+    
+    // --- Gestion des clics (Lightbox et Pagination) ---
     contentArea.addEventListener('click', e => {
+        // Clic sur une image pour ouvrir la lightbox
         if (e.target.tagName === 'IMG' && e.target.dataset.gallery) {
             openLightbox(e.target.dataset.gallery, e.target.dataset.index);
         }
+        // Clic sur un bouton de pagination
+        if (e.target.matches('.pagination-button')) {
+            const galleryName = e.target.dataset.gallery;
+            const direction = parseInt(e.target.dataset.direction, 10);
+            galleryState[galleryName].currentPage += direction;
+            renderContent('gallery');
+            
+            // Fait défiler la page en haut en douceur
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
     });
+
     lightboxClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
     lightboxPrev.addEventListener('click', () => {
@@ -197,13 +234,33 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderContent(page) {
         document.body.classList.remove('home-view', 'gallery-view');
         contentArea.classList.remove('flex-center');
+        
+        let contentHTML = '';
+
         if (page === 'home') {
             contentArea.classList.add('flex-center');
             document.body.classList.add('home-view');
+            contentHTML = pageContent.home;
         } else if (page === 'gallery') {
-             document.body.classList.add('gallery-view');
+            document.body.classList.add('gallery-view');
+            contentHTML = `
+                <div class="w-full">
+                    ${Object.keys(galleries).map((galleryName, index, array) => {
+                        const currentPage = galleryState[galleryName].currentPage;
+                        const galleryHTML = createGalleryHTML(galleryName, galleries[galleryName], currentPage);
+                        if (index < array.length - 1) {
+                            return galleryHTML + `<hr class="gallery-hr">`;
+                        }
+                        return galleryHTML;
+                    }).join('')}
+                </div>
+            `;
+        } else {
+             contentHTML = '<p>Page non trouvée.</p>';
         }
-        contentArea.innerHTML = pageContent[page] || '<p>Page non trouvée.</p>';
+        
+        contentArea.innerHTML = contentHTML;
+
         allNavButtons.forEach(button => {
             button.classList.remove('active');
             if (button.dataset.page === page) {
@@ -224,6 +281,10 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', (event) => {
             playClickSound();
             const page = event.currentTarget.dataset.page;
+            // Réinitialise la page de la galerie si on y retourne
+            if (page === 'gallery') {
+                Object.keys(galleryState).forEach(key => galleryState[key].currentPage = 1);
+            }
             renderContent(page);
             if (mobileMenu.classList.contains('open')) {
                 mobileMenu.classList.remove('open');
