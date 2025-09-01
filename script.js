@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="text-center md:text-left">
                             <h1 class="text-4xl md:text-5xl font-bold text-blue-400">Mio</h1>
-                            <p class="text-lg md:text-xl text-slate-400 mb-4">The social butterfly</p>
+                            <p class="text-lg md:text-xl text-slate-400 mb-4">The social butterfly ~</p>
                             <hr class="border-slate-700/50 my-4">
                             <p class="text-base md:text-lg text-slate-400 mb-6">
                                 Welcome to my little safe place where I enjoy posting what I create. I hope you can relax and enjoy the pictures. ♥
